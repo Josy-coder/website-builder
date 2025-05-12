@@ -2,8 +2,21 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
+import { type DefaultSession, type DefaultUser } from "next-auth";
 
 import { db } from "./db";
+
+declare module "next-auth" {
+    interface Session {
+        user: {
+            id: string;
+        } & DefaultSession["user"];
+    }
+
+    interface User extends DefaultUser {
+        id: string;
+    }
+}
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -26,10 +39,11 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async session({ token, session }) {
             if (token) {
+                session.user = session.user || {};
                 session.user.id = token.id as string;
-                session.user.name = token.name;
-                session.user.email = token.email;
-                session.user.image = token.picture;
+                session.user.name = token.name as string;
+                session.user.email = token.email as string;
+                session.user.image = token.picture as string;
             }
 
             return session;
@@ -37,7 +51,7 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             const dbUser = await db.user.findFirst({
                 where: {
-                    email: token.email,
+                    email: token.email ? token.email : "",
                 },
             });
 

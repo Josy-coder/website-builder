@@ -145,7 +145,7 @@ importers:
         version: 3.24.4
       zustand:
         specifier: ^4.4.6
-        version: 4.5.6(@types/react@18.3.21)(react@18.3.1)
+        version: 4.5.6(@types/react@18.3.21)(immer@10.1.1)(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20.9.4
@@ -187,6 +187,34 @@ importers:
       prisma:
         specifier: ^5.6.0
         version: 5.22.0
+      typescript:
+        specifier: ^5.3.2
+        version: 5.8.3
+
+  packages/editor:
+    dependencies:
+      immer:
+        specifier: ^10.0.3
+        version: 10.1.1
+      nanoid:
+        specifier: ^5.0.2
+        version: 5.1.5
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      zustand:
+        specifier: ^4.4.6
+        version: 4.5.6(@types/react@18.3.21)(immer@10.1.1)(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.38
+        version: 18.3.21
+      eslint:
+        specifier: ^8.54.0
+        version: 8.57.1
       typescript:
         specifier: ^5.3.2
         version: 5.8.3
@@ -2104,6 +2132,9 @@ packages:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
 
+  immer@10.1.1:
+    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
+
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
     engines: {node: '>=6'}
@@ -2514,6 +2545,11 @@ packages:
   nanoid@3.3.11:
     resolution: {integrity: sha512-N8SpfPUnUp1bK+PMYW8qSWdl9U+wwNWI4QKxOYDy9JAro3WMX7p2OeVRF9v+347pnakNevPmiHhNmZ2HbFA76w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
+  nanoid@5.1.5:
+    resolution: {integrity: sha512-Ir/+ZpE9fDsNH0hQ3C68uyThDXzYcim2EqcZ8zn8Chtt1iylPT9xXJB0kPCnqzgcEGikO9RxSrh63MsmVCU7Fw==}
+    engines: {node: ^18 || >=20}
     hasBin: true
 
   napi-postinstall@0.2.3:
@@ -5620,6 +5656,8 @@ snapshots:
 
   ignore@5.3.2: {}
 
+  immer@10.1.1: {}
+
   import-fresh@3.3.1:
     dependencies:
       parent-module: 1.0.1
@@ -6010,6 +6048,8 @@ snapshots:
       thenify-all: 1.6.0
 
   nanoid@3.3.11: {}
+
+  nanoid@5.1.5: {}
 
   napi-postinstall@0.2.3: {}
 
@@ -7098,9 +7138,10 @@ snapshots:
 
   zod@3.24.4: {}
 
-  zustand@4.5.6(@types/react@18.3.21)(react@18.3.1):
+  zustand@4.5.6(@types/react@18.3.21)(immer@10.1.1)(react@18.3.1):
     dependencies:
       use-sync-external-store: 1.5.0(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.21
+      immer: 10.1.1
       react: 18.3.1

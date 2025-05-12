@@ -3,10 +3,12 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../index";
 import { workspaceRouter } from "./workspace";
 import { projectRouter } from "./project";
+import { pageRouter } from "./page";
 
 export const appRouter = createTRPCRouter({
     workspace: workspaceRouter,
     project: projectRouter,
+    page: pageRouter,
     health: publicProcedure.query(() => {
         return {
             status: "ok",
@@ -21,5 +23,4 @@ export const appRouter = createTRPCRouter({
     }),
 });
 
-// Export type definition of API
 export type AppRouter = typeof appRouter;
