@@ -1,0 +1,278 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Users & Authentication
+model User {
+  id            String            @id @default(cuid())
+  name          String?
+  email         String            @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  workspaces    WorkspaceMember[]
+  projects      ProjectMember[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Workspaces & Projects
+model Workspace {
+  id        String            @id @default(cuid())
+  name      String
+  slug      String            @unique
+  members   WorkspaceMember[]
+  projects  Project[]
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+model WorkspaceMember {
+  id          String    @id @default(cuid())
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  role        Role      @default(VIEWER)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([workspaceId, userId])
+}
+
+model Project {
+  id           String           @id @default(cuid())
+  name         String
+  slug         String
+  workspace    Workspace        @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  workspaceId  String
+  members      ProjectMember[]
+  pages        Page[]
+  components   Component[]
+  gitRepo      GitRepo?
+  settings     ProjectSettings?
+  contentTypes ContentType[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([workspaceId, slug])
+}
+
+model ProjectMember {
+  id        String   @id @default(cuid())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  role      Role     @default(VIEWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId, userId])
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  EDITOR
+  DEVELOPER
+  VIEWER
+}
+
+// Design System
+model Page {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String
+  project     Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId   String
+  layout      Json // Stores the layout structure
+  styles      Json? // Page-specific styles
+  meta        Json? // SEO and other metadata
+  renderMode  RenderMode @default(STATIC)
+  isPublished Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([projectId, slug])
+}
+
+model Component {
+  id        String   @id @default(cuid())
+  name      String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  type      String // Built-in or custom
+  structure Json // Component structure
+  props     Json? // Default props
+  styles    Json? // Component styles
+  isShared  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum RenderMode {
+  STATIC // SSG
+  SERVER // SSR
+  INCREMENTAL // ISR
+  CLIENT // CSR
+}
+
+// CMS & Content
+model ContentType {
+  id        String         @id @default(cuid())
+  name      String
+  project   Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  fields    ContentField[]
+  entries   ContentEntry[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@unique([projectId, name])
+}
+
+model ContentField {
+  id            String      @id @default(cuid())
+  name          String
+  type          FieldType
+  required      Boolean     @default(false)
+  defaultValue  Json?
+  settings      Json?
+  contentType   ContentType @relation(fields: [contentTypeId], references: [id], onDelete: Cascade)
+  contentTypeId String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([contentTypeId, name])
+}
+
+model ContentEntry {
+  id            String      @id @default(cuid())
+  contentType   ContentType @relation(fields: [contentTypeId], references: [id], onDelete: Cascade)
+  contentTypeId String
+  data          Json
+  status        Status      @default(DRAFT)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+enum FieldType {
+  TEXT
+  TEXTAREA
+  RICHTEXT
+  NUMBER
+  BOOLEAN
+  DATE
+  MEDIA
+  REFERENCE
+  ARRAY
+  OBJECT
+  COLOR
+  SELECT
+}
+
+enum Status {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Git Integration
+model GitRepo {
+  id            String      @id @default(cuid())
+  project       Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId     String      @unique
+  provider      GitProvider @default(GITHUB)
+  repoName      String
+  repoOwner     String
+  defaultBranch String      @default("main")
+  accessToken   String?     @db.Text
+  lastSynced    DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+enum GitProvider {
+  GITHUB
+  GITLAB
+  BITBUCKET
+}
+
+// Project Settings
+model ProjectSettings {
+  id        String  @id @default(cuid())
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String  @unique
+
+  // General settings
+  basePath  String @default("/")
+  outputDir String @default("out")
+
+  // Build settings
+  buildCommand String?
+  devCommand   String?
+
+  // Authentication settings
+  authEnabled  Boolean       @default(false)
+  authProvider AuthProvider?
+  authConfig   Json?
+
+  // Advanced settings
+  customDependencies Json? // Additional npm packages
+  environmentVars    Json? // Environment variables
+  customCode         Json? // Custom code injection points
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum AuthProvider {
+  NEXTAUTH
+  CLERK
+  AUTH0
+  CUSTOM
+}

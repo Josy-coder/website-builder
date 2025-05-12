@@ -1,0 +1,18 @@
+Business Source License 1.1
+
+Parameters
+
+Licensor: [Your Name or Company]
+Licensed Work: The software in this repository
+Use Limitation: The Licensed Work may not be used in a production environment, including offering it to third parties as a hosted or cloud-based service, without purchasing a commercial license from the Licensor.
+Change Date: 2029-05-12
+Change License: GNU Affero General Public License, version 3 (AGPL-3.0)
+
+Terms
+
+The Licensed Work is provided under the terms of the Business Source License 1.1, a copy of which is available at https://mariadb.com/bsl11.
+
+Any use of the Licensed Work not permitted under this License, including without limitation use in a production environment, must be governed by a separate agreement with the Licensor. As of the Change Date, the Licensed Work will be made available under the Change License.
+
+License text © 2017 MariaDB Corporation Ab.
+This license text is available under the Creative Commons Attribution 4.0 International license.
