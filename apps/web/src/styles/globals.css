@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 222.2 84% 4.9%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 222.2 84% 4.9%;
+
+        --primary: 222.2 47.4% 11.2%;
+        --primary-foreground: 210 40% 98%;
+
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
+
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
+
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 222.2 84% 4.9%;
+
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+
+        --primary: 210 40% 98%;
+        --primary-foreground: 222.2 47.4% 11.2%;
+
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 210 40% 98%;
+
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        --ring: 212.7 26.8% 83.9%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* Canvas and editor specific styles */
+.editor-canvas {
+    @apply w-full h-full overflow-hidden bg-white dark:bg-gray-900;
+}
+
+.canvas-grid {
+    background-size: 20px 20px;
+    background-image: linear-gradient(to right, #f0f0f0 1px, transparent 1px),
+    linear-gradient(to bottom, #f0f0f0 1px, transparent 1px);
+}
+
+.dark .canvas-grid {
+    background-image: linear-gradient(to right, #1f2937 1px, transparent 1px),
+    linear-gradient(to bottom, #1f2937 1px, transparent 1px);
+}
+
+/* Component selection styles */
+.component-selected {
+    @apply outline-2 outline-blue-500 outline;
+}
+
+/* Animation timeline styles */
+.timeline-track {
+    @apply h-8 bg-gray-100 dark:bg-gray-800 rounded relative;
+}
+
+.timeline-keyframe {
+    @apply absolute h-6 w-2 bg-blue-500 rounded cursor-pointer top-1;
+}
+
+.timeline-keyframe:hover {
+    @apply bg-blue-600;
+}
+
+/* Sidebar and panel styles */
+.sidebar {
+    @apply w-64 border-r border-border h-screen overflow-y-auto;
+}
+
+.panel-header {
+    @apply px-4 py-2 font-medium text-sm border-b border-border flex items-center justify-between;
+}
+
+.panel-content {
+    @apply p-4;
+}
+
+/* Properties panel styles */
+.property-group {
+    @apply mb-4;
+}
+
+.property-group-title {
+    @apply text-xs font-medium text-muted-foreground mb-2;
+}
+
+.property-row {
+    @apply flex items-center gap-2 mb-2;
+}
+
+.property-label {
+    @apply text-xs text-muted-foreground w-24;
+}
+
+.property-value {
+    @apply flex-1;
+}
+
+/* Component library styles */
+.component-item {
+    @apply p-2 rounded border border-border flex items-center gap-2 cursor-move hover:bg-accent mb-2;
+}
+
+.component-item-icon {
+    @apply w-5 h-5 text-muted-foreground;
+}
+
+.component-item-name {
+    @apply text-sm;
+}
+
+/* Code editor styles */
+.code-editor {
+    @apply font-mono text-sm rounded bg-black text-white overflow-auto;
+}
+
+/* Responsive preview styles */
+.device-preview {
+    @apply border border-border rounded overflow-hidden mx-auto;
+}
+
+.device-preview-mobile {
+    @apply w-[375px] h-[667px];
+}
+
+.device-preview-tablet {
+    @apply w-[768px] h-[1024px];
+}
+
+.device-preview-desktop {
+    @apply w-[1280px] h-[800px];
+}
+
+/* Layer navigation */
+.layer-item {
+    @apply flex items-center py-1 px-2 text-sm cursor-pointer hover:bg-accent rounded;
+}
+
+.layer-item-active {
+    @apply bg-accent;
+}
+
+.layer-item-icon {
+    @apply mr-2 w-4 h-4 text-muted-foreground;
+}
+
+.layer-item-children {
+    @apply ml-4 border-l border-border pl-2;
+}
+
+/* Color picker */
+.color-swatch {
+    @apply w-5 h-5 rounded-full border border-border cursor-pointer;
+}
+
+/* UploadThing styles */
+.ut-button {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.ut-upload-icon {
+    @apply text-muted-foreground;
+}
+
+.ut-label {
+    @apply text-sm font-medium;
+}
+
+/* Animation controls */
+.animation-control {
+    @apply flex items-center gap-2;
+}
+
+.animation-button {
+    @apply p-1 rounded hover:bg-accent cursor-pointer;
+}
+
+.animation-slider {
+    @apply w-full h-1 bg-muted rounded-full appearance-none;
+}
+
+.animation-slider::-webkit-slider-thumb {
+    @apply appearance-none w-3 h-3 rounded-full bg-primary cursor-pointer;
+}
